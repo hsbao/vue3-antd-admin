@@ -1,0 +1,36 @@
+.setStyle(@className, @propName) {
+  html {
+    &.dark {
+      .@{className} {
+        @{propName}: @black;
+      }
+    }
+
+    &:not(.dark) {
+      .@{className} {
+        @{propName}: @white;
+      }
+    }
+  }
+}
+
+.themeColor(@classNames, @i: 1) when(@i =< length(@classNames)) {
+  @className: extract(@classNames, @i);
+
+  .setStyle(@className, background-color);
+  .setStyle(@className, color);
+
+  .themeColor(@classNames, (@i + 1));
+}
+
+.themeTextColor(@classNames, @i: 1) when(@i =< length(@classNames)) {
+  @className: extract(@classNames, @i);
+  .setStyle(@className, color);
+  .themeColor(@classNames, (@i + 1));
+}
+
+.themeBgColor(@classNames, @i: 1) when(@i =< length(@classNames)) {
+  @className: extract(@classNames, @i);
+  .setStyle(@className, background-color);
+  .themeColor(@classNames, (@i + 1));
+}
