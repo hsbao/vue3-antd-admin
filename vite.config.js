@@ -91,7 +91,7 @@ export default ({ mode }) => {
       target: 'es2015',
       minify: 'esbuild',
       cssTarget: 'chrome79',
-      chunkSizeWarningLimit: 2000,
+      chunkSizeWarningLimit: 1024,
       emptyOutDir: true,
     },
   })

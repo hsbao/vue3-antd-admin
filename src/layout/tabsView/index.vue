@@ -31,6 +31,14 @@
                 <close-outlined />
                 关闭标签页
               </Menu.Item>
+              <Menu.Item key="3" @click="closeLeft(route)">
+                <vertical-right-outlined />
+                关闭左侧标签页
+              </Menu.Item>
+              <Menu.Item key="4" @click="closeRight(route)">
+                <vertical-left-outlined />
+                关闭右侧标签页
+              </Menu.Item>
               <Menu.Divider />
               <Menu.Item key="5" @click="closeOther(route)">
                 <column-width-outlined />
@@ -109,13 +117,10 @@ try {
 // 初始化标签页
 // tabsViewStore.initTabs(routes)
 
-// tabsViewMutations.initTabs(routes)
-
 watch(
   () => route.fullPath,
   () => {
     if (blackList.some((n) => n === route.name)) return
-    // tabsViewMutations.addTabs(getSimpleRoute(route)
     tabsViewStore.addTabs(getSimpleRoute(route))
   },
   { immediate: true }
@@ -160,9 +165,21 @@ const reloadPage = () => {
   })
 }
 
+// 关闭左侧
+const closeLeft = (route) => {
+  // tabsViewMutations.closeLeftTabs(route)
+  tabsViewStore.closeLeftTabs(route)
+  !isCurrentRoute(route) && router.replace(route.fullPath)
+}
+
+// 关闭右侧
+const closeRight = (route) => {
+  tabsViewStore.closeRightTabs(route)
+  !isCurrentRoute(route) && router.replace(route.fullPath)
+}
+
 // 关闭其他
 const closeOther = (route) => {
-  // tabsViewMutations.closeOtherTabs(route)
   tabsViewStore.closeOtherTabs(route)
   !isCurrentRoute(route) && router.replace(route.fullPath)
 }
@@ -170,8 +187,8 @@ const closeOther = (route) => {
 // 关闭全部
 const closeAll = () => {
   // storage.removeItem(TABS_ROUTES)
-  // tabsViewMutations.closeAllTabs()
   if (tabsList.value.length > 1) {
+    // 如果当前页是主页，关闭全部并不会刷新页面
     tabsViewStore.closeAllTabs()
     router.replace('/')
   }

@@ -1,7 +1,7 @@
 <script setup>
 import { useRouter, useRoute } from 'vue-router'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
-import { Layout, Modal, Dropdown, Menu, Space, Avatar } from 'ant-design-vue'
+import { Layout, Modal, Dropdown, Menu, Space, Avatar, Breadcrumb } from 'ant-design-vue'
 
 import ProjectSetting from './components/setting/index.vue'
 
@@ -49,7 +49,7 @@ const menus = computed(() => {
       {
         name: '__index',
         meta: {
-          title: '首页',
+          title: '云海吾乡',
         },
         children: userStore.menus,
       },
@@ -122,6 +122,28 @@ const doLogout = () => {
             <component :is="collapsed ? MenuUnfoldOutlined : MenuFoldOutlined" />
           </span>
         </Space>
+
+        <!-- 导航面包屑 -->
+        <Breadcrumb>
+          <template v-for="(routeItem, rotueIndex) in menus" :key="routeItem?.name">
+            <Breadcrumb.Item>
+              <span>{{ routeItem?.meta?.title }}</span>
+              <template v-if="routeItem?.children?.length" #overlay>
+                <Menu :selected-keys="getSelectKeys(rotueIndex)">
+                  <template v-for="childItem in routeItem?.children" :key="childItem.name">
+                    <Menu.Item
+                      v-if="!childItem.meta?.hideInMenu && !childItem.meta?.hideInBreadcrumb"
+                      :key="childItem.name"
+                      @click="clickMenuItem(childItem)"
+                    >
+                      {{ childItem.meta?.title }}
+                    </Menu.Item>
+                  </template>
+                </Menu>
+              </template>
+            </Breadcrumb.Item>
+          </template>
+        </Breadcrumb>
       </slot>
     </Space>
 
